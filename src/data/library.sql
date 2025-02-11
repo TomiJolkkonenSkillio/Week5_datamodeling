@@ -3,13 +3,14 @@
 
 CREATE TABLE DimCalendar (
     Date DATE PRIMARY KEY,
-    Year INT GENERATED ALWAYS AS (YEAR(Date)) STORED,
-    Month INT GENERATED ALWAYS AS (MONTH(Date)) STORED,
-    Day INT GENERATED ALWAYS AS (DAY(Date)) STORED,
-    Weekday INT GENERATED ALWAYS AS (WEEKDAY(Date) + 1) STORED, -- 1=Monday, 7=Sunday
-    Quarter INT GENERATED ALWAYS AS (QUARTER(Date)) STORED,
-    YearMonth VARCHAR(7) GENERATED ALWAYS AS (DATE_FORMAT(Date, '%Y-%m')) STORED
+    Year INT NOT NULL, 
+    Month INT NOT NULL,
+    Day INT NOT NULL,
+    Weekday INT NOT NULL, -- 1=Monday, 7=Sunday
+    Quarter INT NOT NULL,
+    YearMonth TEXT NOT NULL
 );
+
 
 CREATE TABLE DimCustomers (
     CustomerID SERIAL PRIMARY KEY,
@@ -44,7 +45,7 @@ CREATE TABLE FactLoans (
     CONSTRAINT fk_DimBooks FOREIGN KEY (BookID) REFERENCES DimBooks(BookID),
     CONSTRAINT fk_DimLibraries FOREIGN KEY (LibraryID) REFERENCES DimLibraries(LibraryID),
     CONSTRAINT fk_DimCalendar FOREIGN KEY (LoanDate) REFERENCES DimCalendar(Date),
-    CONSTRAINT fk_DimCustomers FOREIGN KEY (CustomerID) REFERENCES DimCustomers(CustomerID),
+    CONSTRAINT fk_DimCustomers FOREIGN KEY (CustomerID) REFERENCES DimCustomers(CustomerID)
 );
 
 
@@ -53,13 +54,23 @@ CREATE TABLE FactLoans (
 
 -- DimCalendar
 WITH RECURSIVE DateSeries AS (
-    SELECT '2023-01-01' AS Date  -- Start date
+    SELECT '2023-01-01'::DATE AS Date  -- Start date
     UNION ALL
-    SELECT Date + INTERVAL 1 DAY
+    SELECT Date + INTERVAL '1 day'
     FROM DateSeries
-    WHERE Date < '2025-12-31'  -- End date
+    WHERE Date < '2025-12-31'  -- End date (10 years)
 )
-INSERT INTO DimCalendar (Date);
+INSERT INTO DimCalendar (Date, Year, Month, Day, Weekday, Quarter, YearMonth)
+SELECT 
+    Date,
+    EXTRACT(YEAR FROM Date),
+    EXTRACT(MONTH FROM Date),
+    EXTRACT(DAY FROM Date),
+    EXTRACT(ISODOW FROM Date),  -- 1=Monday, 7=Sunday
+    EXTRACT(QUARTER FROM Date),
+    TO_CHAR(Date, 'YYYY-MM')
+FROM DateSeries;
+
 
 
 -- DimCustomers
