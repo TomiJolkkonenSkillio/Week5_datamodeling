@@ -44,7 +44,8 @@ CREATE TABLE FactLoans (
     ReturnDate DATE,
     CONSTRAINT fk_DimBooks FOREIGN KEY (BookID) REFERENCES DimBooks(BookID),
     CONSTRAINT fk_DimLibraries FOREIGN KEY (LibraryID) REFERENCES DimLibraries(LibraryID),
-    CONSTRAINT fk_DimCalendar FOREIGN KEY (LoanDate) REFERENCES DimCalendar(Date),
+    CONSTRAINT fk_DimCalendar1 FOREIGN KEY (LoanDate) REFERENCES DimCalendar(Date),
+    CONSTRAINT fk_DimCalendar2 FOREIGN KEY (ReturnDate) REFERENCES DimCalendar(Date),
     CONSTRAINT fk_DimCustomers FOREIGN KEY (CustomerID) REFERENCES DimCustomers(CustomerID)
 );
 
@@ -54,11 +55,11 @@ CREATE TABLE FactLoans (
 
 -- DimCalendar
 WITH RECURSIVE DateSeries AS (
-    SELECT '2023-01-01'::DATE AS Date  -- Start date
+    SELECT '2023-01-01'::DATE AS Date  -- Start date (adjust as needed)
     UNION ALL
-    SELECT Date + INTERVAL '1 day'
+    SELECT (Date + INTERVAL '1 day')::DATE  -- Cast back to DATE
     FROM DateSeries
-    WHERE Date < '2025-12-31'  -- End date (10 years)
+    WHERE Date < '2025-12-31'  -- End date
 )
 INSERT INTO DimCalendar (Date, Year, Month, Day, Weekday, Quarter, YearMonth)
 SELECT 
@@ -73,8 +74,9 @@ FROM DateSeries;
 
 
 
+
 -- DimCustomers
-INSERT INTO DimCustomers (Name, Email, Date_Of_Birth) VALUES
+INSERT INTO DimCustomers (Name, Email, DateOfBirth) VALUES
     ('Samu Syväoja', 'samu.syvaoja@example.com', '1990-02-15'),
     ('Linda Ulma', 'linda.ulma@example.com', '1985-06-23'),
     ('Tomi Jolkkonen', 'tomi.jolkkonen@example.com', '2000-11-12'),
@@ -98,52 +100,52 @@ INSERT INTO DimLibraries (City, District) VALUES
     ('Helsinki', 'Rikhardinkatu');
 
 -- FactLoans
-INSERT INTO FactLoans (BookID, LibraryID, DateID, CustomerID, LoanDate, ReturnDate) VALUES
-    (1, 1, 1, 1, '2025-01-01', '2025-01-15'),
-    (2, 2, 2, 2, '2025-01-02', '2025-01-16'),
-    (3, 3, 3, 3, '2025-01-03', '2025-01-17'),
-    (4, 4, 4, 4, '2025-01-04', '2025-01-18'),
-    (5, 5, 5, 5, '2025-01-05', '2025-01-19');
+INSERT INTO FactLoans (BookID, LibraryID, CustomerID, LoanDate, ReturnDate) VALUES
+    (1, 1, 1, '2025-01-01', '2025-01-15'),
+    (2, 2, 2, '2025-01-02', '2025-01-16'),
+    (3, 3, 3, '2025-01-03', '2025-01-17'),
+    (4, 4, 4, '2025-01-04', '2025-01-18'),
+    (5, 5, 5, '2025-01-05', '2025-01-19');
 
 
 -- analysis
 -- Task 1: Top-loaned books based on the total loans
 SELECT 
-    b.Title AS Book_Title, 
-    COUNT(f.Loan_ID) AS Total_Loans
+    b.Title AS BookTitle, 
+    COUNT(f.LoanID) AS TotalLoans
 FROM 
     FactLoans f
 JOIN 
-    DimBooks b ON f.Book_ID = b.Book_ID
+    DimBooks b ON f.BookID = b.BookID
 GROUP BY 
     b.Title
 ORDER BY 
-    Total_Loans DESC
+    TotalLoans DESC
 LIMIT 10;
 
 -- Task 2: Current loan amounts of all books
 SELECT 
-    b.Title AS Book_Title, 
-    COUNT(f.Loan_ID) AS Current_Loans
+    b.Title AS BookTitle, 
+    COUNT(f.LoanID) AS CurrentLoans
 FROM 
     DimBooks b
 LEFT JOIN 
-    FactLoans f ON b.Book_ID = f.Book_ID AND f.ReturnDate IS NULL
+    FactLoans f ON b.BookID = f.BookID AND f.ReturnDate IS NULL
 GROUP BY 
     b.Title
 ORDER BY 
-    Book_Title;
+    BookTitle;
 
 -- Task 3: Customers who have made the most loans
 SELECT 
-    c.Name AS Customer_Name, 
-    COUNT(f.Loan_ID) AS Total_Loans
+    c.Name AS CustomerName, 
+    COUNT(f.LoanID) AS TotalLoans
 FROM 
     FactLoans f
 JOIN 
-    DimCustomers c ON f.Customer_ID = c.Customer_ID
+    DimCustomers c ON f.CustomerID = c.CustomerID
 GROUP BY 
     c.Name
 ORDER BY 
-    Total_Loans DESC
+    TotalLoans DESC
 LIMIT 10;
