@@ -2,31 +2,32 @@
 -- Dimension tables
 
 CREATE TABLE DimCalendar (
-    Date_ID SERIAL PRIMARY KEY,
-    Date DATE NOT NULL,
-    Year INT,
-    Month INT,
-    WeekNumber INT,
-    DayOfWeek INT,
-    Day INT
+    Date DATE PRIMARY KEY,
+    Year INT GENERATED ALWAYS AS (YEAR(Date)) STORED,
+    Month INT GENERATED ALWAYS AS (MONTH(Date)) STORED,
+    Day INT GENERATED ALWAYS AS (DAY(Date)) STORED,
+    Weekday INT GENERATED ALWAYS AS (WEEKDAY(Date) + 1) STORED, -- 1=Monday, 7=Sunday
+    Quarter INT GENERATED ALWAYS AS (QUARTER(Date)) STORED,
+    YearMonth VARCHAR(7) GENERATED ALWAYS AS (DATE_FORMAT(Date, '%Y-%m')) STORED
 );
 
 CREATE TABLE DimCustomers (
-    Customer_ID SERIAL PRIMARY KEY,
+    CustomerID SERIAL PRIMARY KEY,
     Name VARCHAR(50),
-    Email VARCHAR(50),
-    Date_Of_Birth DATE
+    Email VARCHAR(100),
+    DateOfBirth DATE
 );
 
 CREATE TABLE DimBooks (
-    Book_ID SERIAL PRIMARY KEY,
+    BookID SERIAL PRIMARY KEY,
     Title VARCHAR(50),
     Author VARCHAR(50),
+    PublishDate DATE,
     Genre VARCHAR(50)
 );
 
-CREATE TABLE DimLibrary (
-    Library_ID SERIAL PRIMARY KEY,
+CREATE TABLE DimLibraries (
+    LibraryID SERIAL PRIMARY KEY,
     City VARCHAR(50),
     District VARCHAR(50)
 );
@@ -34,13 +35,16 @@ CREATE TABLE DimLibrary (
 -- Fact Table
 
 CREATE TABLE FactLoans (
-    Loan_ID SERIAL PRIMARY KEY,
-    Book_ID INT REFERENCES DimBooks(Book_ID),
-    Library_ID INT REFERENCES DimLibrary(Library_ID),
-    Date_ID INT REFERENCES DimCalendar(Date_ID),
-    Customer_ID INT REFERENCES DimCustomers(Customer_ID),
+    LoanID SERIAL PRIMARY KEY,
+    BookID INT,
+    LibraryID INT,
+    CustomerID INT,
     LoanDate DATE,
-    ReturnDate DATE
+    ReturnDate DATE,
+    CONSTRAINT fk_DimBooks FOREIGN KEY (BookID) REFERENCES DimBooks(BookID),
+    CONSTRAINT fk_DimLibraries FOREIGN KEY (LibraryID) REFERENCES DimLibraries(LibraryID),
+    CONSTRAINT fk_DimCalendar FOREIGN KEY (LoanDate) REFERENCES DimCalendar(Date),
+    CONSTRAINT fk_DimCustomers FOREIGN KEY (CustomerID) REFERENCES DimCustomers(CustomerID),
 );
 
 
