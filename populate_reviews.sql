@@ -1,4 +1,4 @@
-INSERT INTO Reviews (ReviewID, ReviewDate, Rating, Comment, CustomerID, ProductID) VALUES
+INSERT INTO Reviews (ReviewDate, Rating, Comment, CustomerID, ProductID) VALUES
 ('2023-02-23', 1, 'Not as described, poor quality.', 79, 4),
 ('2023-02-24', 5, 'Love it! Will buy again.', 57, 29),
 ('2023-02-28', 1, 'Terrible quality, do not buy!', 21, 10),
