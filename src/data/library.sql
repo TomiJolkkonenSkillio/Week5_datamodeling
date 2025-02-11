@@ -52,12 +52,12 @@ CREATE TABLE FactLoans (
 -- populate data
 
 -- DimCalendar
-INSERT INTO DimCalendar (Date, Year, Month, WeekNumber, DayOfWeek, Day) VALUES
-    ('2025-01-01', 2025, 1, 1, 3, 1),
-    ('2025-01-02', 2025, 1, 1, 4, 2),
-    ('2025-01-03', 2025, 1, 1, 5, 3),
-    ('2025-01-04', 2025, 1, 1, 6, 4),
-    ('2025-01-05', 2025, 1, 1, 7, 5);
+INSERT INTO DimCalendar (Date) VALUES
+    ('2025-01-01'),
+    ('2025-01-02'),
+    ('2025-01-03'),
+    ('2025-01-04'),
+    ('2025-01-05');
 
 -- DimCustomers
 INSERT INTO DimCustomers (Name, Email, Date_Of_Birth) VALUES
@@ -76,7 +76,7 @@ INSERT INTO DimBooks (Title, Author, Genre) VALUES
     ('Pride and Prejudice', 'Jane Austen', 'Romance');
 
 -- DimLibrary
-INSERT INTO DimLibrary (City, District) VALUES
+INSERT INTO DimLibraries (City, District) VALUES
     ('Helsinki', 'Pasila'),
     ('Vantaa', 'Tikkurila'),
     ('Espoo', 'Leppävaara'),
@@ -84,7 +84,7 @@ INSERT INTO DimLibrary (City, District) VALUES
     ('Helsinki', 'Rikhardinkatu');
 
 -- FactLoans
-INSERT INTO FactLoans (Book_ID, Library_ID, Date_ID, Customer_ID, LoanDate, ReturnDate) VALUES
+INSERT INTO FactLoans (BookID, LibraryID, DateID, CustomerID, LoanDate, ReturnDate) VALUES
     (1, 1, 1, 1, '2025-01-01', '2025-01-15'),
     (2, 2, 2, 2, '2025-01-02', '2025-01-16'),
     (3, 3, 3, 3, '2025-01-03', '2025-01-17'),
