@@ -52,12 +52,15 @@ CREATE TABLE FactLoans (
 -- populate data
 
 -- DimCalendar
-INSERT INTO DimCalendar (Date) VALUES
-    ('2025-01-01'),
-    ('2025-01-02'),
-    ('2025-01-03'),
-    ('2025-01-04'),
-    ('2025-01-05');
+WITH RECURSIVE DateSeries AS (
+    SELECT '2023-01-01' AS Date  -- Start date
+    UNION ALL
+    SELECT Date + INTERVAL 1 DAY
+    FROM DateSeries
+    WHERE Date < '2025-12-31'  -- End date
+)
+INSERT INTO DimCalendar (Date);
+
 
 -- DimCustomers
 INSERT INTO DimCustomers (Name, Email, Date_Of_Birth) VALUES
