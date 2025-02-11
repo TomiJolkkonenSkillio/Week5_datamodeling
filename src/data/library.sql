@@ -83,6 +83,20 @@ INSERT INTO DimCustomers (Name, Email, DateOfBirth) VALUES
     ('Juha Mieto', 'juha.mieto@example.com', '1995-04-09'),
     ('Beyonce Nikkola', 'beyonce.nikkola@example.com', '1988-09-17');
 
+-- More customers
+INSERT INTO DimCustomers (Name, Email, DateOfBirth) VALUES
+    ('Aino Laine', 'aino.laine@example.com', '1987-05-10'),
+    ('Hannu Kallio', 'hannu.kallio@example.com', '1981-08-21'),
+    ('Katriina Palmu', 'katriina.palmu@example.com', '1999-09-03'),
+    ('Mikko Rantala', 'mikko.rantala@example.com', '1994-01-25'),
+    ('Laura Mikkola', 'laura.mikkola@example.com', '1983-12-14'),
+    ('Veikko Salo', 'veikko.salo@example.com', '1991-11-17'),
+    ('Anniina Järvinen', 'anniina.jarvinen@example.com', '1997-06-30'),
+    ('Risto Hämäläinen', 'risto.hamalainen@example.com', '1990-03-05'),
+    ('Elina Nieminen', 'elina.nieminen@example.com', '1986-04-22'),
+    ('Jari Peltonen', 'jari.peltonen@example.com', '1995-10-13');
+
+
 -- DimBooks
 INSERT INTO DimBooks (Title, Author, Genre) VALUES
     ('The Great Gatsby', 'F. Scott Fitzgerald', 'Fiction'),
@@ -90,6 +104,20 @@ INSERT INTO DimBooks (Title, Author, Genre) VALUES
     ('To Kill a Mockingbird', 'Harper Lee', 'Classic'),
     ('Moby Dick', 'Herman Melville', 'Adventure'),
     ('Pride and Prejudice', 'Jane Austen', 'Romance');
+
+-- More books
+INSERT INTO DimBooks (Title, Author, Genre) VALUES
+    ('The Odyssey', 'Homer', 'Classic'),
+    ('The Divine Comedy', 'Dante Alighieri', 'Epic Poetry'),
+    ('Dracula', 'Bram Stoker', 'Horror'),
+    ('Frankenstein', 'Mary Shelley', 'Gothic Fiction'),
+    ('The Brothers Karamazov', 'Fyodor Dostoevsky', 'Philosophical Fiction'),
+    ('The Great Alone', 'Kristin Hannah', 'Historical Fiction'),
+    ('The Fault in Our Stars', 'John Green', 'Romance'),
+    ('The Hunger Games', 'Suzanne Collins', 'Dystopian'),
+    ('Little Women', 'Louisa May Alcott', 'Classic'),
+    ('Catch-22', 'Joseph Heller', 'Satire');
+
 
 -- DimLibrary
 INSERT INTO DimLibraries (City, District) VALUES
@@ -106,6 +134,30 @@ INSERT INTO FactLoans (BookID, LibraryID, CustomerID, LoanDate, ReturnDate) VALU
     (3, 3, 3, '2025-01-03', '2025-01-17'),
     (4, 4, 4, '2025-01-04', '2025-01-18'),
     (5, 5, 5, '2025-01-05', '2025-01-19');
+
+-- More loans
+INSERT INTO FactLoans (BookID, LibraryID, CustomerID, LoanDate, ReturnDate) VALUES
+    (1, 1, 6, '2025-01-16', '2025-01-30'),
+    (2, 2, 7, '2025-01-17', '2025-01-31'),
+    (3, 3, 8, '2025-01-18', '2025-02-01'),
+    (4, 4, 9, '2025-01-19', '2025-02-02'),
+    (5, 5, 10, '2025-01-20', '2025-02-03'),
+    (6, 1, 1, '2025-01-21', '2025-02-04'),
+    (7, 2, 2, '2025-01-22', '2025-02-05'),
+    (8, 3, 3, '2025-01-23', '2025-02-06'),
+    (9, 4, 4, '2025-01-24', '2025-02-07'),
+    (10, 5, 5, '2025-01-25', '2025-02-08'),
+    (11, 1, 11, '2025-01-26', '2025-02-09'),
+    (12, 2, 12, '2025-01-27', '2025-02-10'),
+    (13, 3, 13, '2025-01-28', '2025-02-11'),
+    (14, 4, 14, '2025-01-29', '2025-02-12'),
+    (15, 5, 15, '2025-01-30', '2025-02-13'),
+    (6, 1, 3, '2025-01-31', '2025-02-14'),
+    (7, 2, 8, '2025-02-01', '2025-02-15'),
+    (8, 3, 11, '2025-02-02', '2025-02-16'),
+    (9, 4, 14, '2025-02-03', '2025-02-17'),
+    (10, 5, 5, '2025-02-04', '2025-02-18'),
+    (1, 1, 7, '2025-02-05', '2025-02-19');
 
 
 -- analysis
