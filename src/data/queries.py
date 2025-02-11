@@ -75,31 +75,9 @@ def database_design():
         '''
         cursor.execute(SQL_CREATE_REVIEWS_TABLE)
 
-        # Insert sample rows into the customers table (skip duplicates)
-        SQL_INSERT_CUSTOMERS_ROWS = '''
-        INSERT INTO customers (name, email, city, country, customer_segment)
-        VALUES
-            ('John Doe', 'john.doe@example.com', 'New York', 'USA', 'Consumer'),
-            ('Jane Smith', 'jane.smith@example.com', 'London', 'UK', 'Corporate'),
-            ('Alice Johnson', 'alice.johnson@example.com', 'Paris', 'France', 'Small Business')
-        ON CONFLICT (email) DO NOTHING;
-        '''
-        cursor.execute(SQL_INSERT_CUSTOMERS_ROWS)
-
-        # Insert sample rows into the products table
-        SQL_INSERT_PRODUCTS_ROWS = '''
-        INSERT INTO products (product_name, product_category, unit_price, inventory)
-        VALUES
-            ('Laptop', 'Electronics', 999.99, 50),
-            ('Phone', 'Electronics', 699.99, 200),
-            ('Desk', 'Furniture', 150.00, 100)
-        ON CONFLICT DO NOTHING;
-        '''
-        cursor.execute(SQL_INSERT_PRODUCTS_ROWS)
-
         con.commit()
         cursor.close()
-        print("Tables created and rows inserted successfully.")
+        print("Tables created successfully.")
     except (Exception, psycopg2.DatabaseError) as error:
         print(f"Error: {error}")
     finally:
