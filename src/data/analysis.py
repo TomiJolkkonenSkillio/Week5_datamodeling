@@ -23,14 +23,15 @@ def execute_query(query, params=None):
 def get_top_selling_products():
     query = """
         SELECT 
-            p.product_name, 
-            SUM(oi.Quantity) AS total_quantity_sold
+            p.ProductName, 
+            SUM(oi.Quantity) AS total_quantity_sold,
+            SUM(oi.Quantity* p.UnitPrice) AS total_sales
         FROM 
             products p
         JOIN 
-            orderitems oi ON p.product_id = oi.ProductID
+            orderitems oi ON p.ProductID = oi.ProductID
         GROUP BY 
-            p.product_name
+            p.ProductName
         ORDER BY 
             total_quantity_sold DESC
         LIMIT 10;
@@ -42,12 +43,12 @@ def get_top_selling_products():
 def get_inventory_levels():
     query = """
         SELECT 
-            product_name, 
-            inventory
+            ProductName, 
+            Inventory
         FROM 
             products
         ORDER BY 
-            product_name;
+            ProductName;
     """
     return execute_query(query)
 
@@ -56,15 +57,16 @@ def get_inventory_levels():
 def get_most_valuable_customers():
     query = """
         SELECT 
-            c.name, 
-            c.email, 
+            c.Name, 
+            c.Country,
+            c.CustomerSegment,
             SUM(o.OrderValue) AS total_spent
         FROM 
             customers c
         JOIN 
-            orders o ON c.customer_id = o.CustomerID
+            orders o ON c.CustomerID = o.CustomerID
         GROUP BY 
-            c.name, c.email
+            c.Name, c.Country, c.CustomerSegment
         ORDER BY 
             total_spent DESC
         LIMIT 10;
@@ -72,20 +74,20 @@ def get_most_valuable_customers():
     return execute_query(query)
 
 def main():
-    print("Top-Selling Products:")
-    top_selling = get_top_selling_products()
-    for product in top_selling:
-        print(f"Product: {product[0]}, Total Quantity Sold: {product[1]}")
+    # print("Top-Selling Products:")
+    # top_selling = get_top_selling_products()
+    # for product in top_selling:
+    #     print(f"Product: {product[0]}, Total Quantity Sold: {product[1]}, Total Sales: {product[2]}")
 
-    print("\nInventory Levels:")
-    inventory = get_inventory_levels()
-    for item in inventory:
-        print(f"Product: {item[0]}, Inventory: {item[1]}")
+    # print("\nInventory Levels:")
+    # inventory = get_inventory_levels()
+    # for item in inventory:
+    #     print(f"Product: {item[0]}, Inventory: {item[1]}")
 
     print("\nMost Valuable Customers:")
     valuable_customers = get_most_valuable_customers()
     for customer in valuable_customers:
-        print(f"Customer: {customer[0]}, Email: {customer[1]}, Total Spent: {customer[2]}")
+        print(f"Customer: {customer[0]}, Country: {customer[1]}, Segment: {customer[2]} Total Spent: {customer[3]}")
 
 if __name__ == "__main__":
     main()
