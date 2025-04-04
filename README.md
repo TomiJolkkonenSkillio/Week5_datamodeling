@@ -10,6 +10,7 @@ Tech used:
 - SQL
 - ERD Plus
 
+What did we do: 
 - Designed different data models based on different business cases
 - Created databases in local PosgreSQL server
 - Generated fake data with python Faker library and using AI
